@@ -1,21 +1,55 @@
 #include "Movies.h"
+using namespace std;
 Movies::Movies()
 {
-    *wkt = new vector<Movie>;
+    wkt = new vector<Movie>;
 }
 void Movies::add_movie()
 {
-    std::name_movie, std::rating_movie;
+    string name_movie, rating_movie;
     int count{};
     cout << "\nProsze podac nazwe filmu: ";
     cin >> name_movie;
     cout << "\nProsze podac Rating PG: ";
-    rating_movie = (*wkt).pg_secure();
+    rating_movie = pg_secure();
     cout << "\nProsze podac ile razy ogladano: ";
     cin >> count;
-    (*wkt).pushback(name_movie, rating_movie, count);
+    (*wkt).push_back(Movie(name_movie, rating_movie, count));
     cout << "\nDodano nowa pozycje: ";
 }
 std::string Movies::pg_secure()
 {
+    std::string choise;
+    cout << "\nProsze podac jedna z opcji \n1 - G\n2 - PG \n3 - PG-13 \n4 - R: ";
+    cin >> choise;
+    while (1)
+    {
+        if (choise == "G")
+            return choise;
+        else if (choise == "PG")
+            return choise;
+        else if (choise == "PG-13")
+            return choise;
+        else if (choise == "R")
+            return choise;
+        else
+            cout << "Bledna kategoria sprobuj jeszcze raz" << endl;
+    }
+}
+void Movies::display()
+{
+    for (Movie colection : *wkt)
+        cout << colection.name << " " << colection.rating << " " << colection.watched_count << endl;
+}
+void Movies::increment(std::string movie)
+{
+    for (Movie colection : *wkt)
+    {
+        if (movie.compare(colection.name) == 0) //konstruktor kopiujacy ?
+        {
+            colection.watched_count += 1;
+            break;
+        }
+    }
+    cout << "Nie znaleziono filmu !" << endl;
 }
