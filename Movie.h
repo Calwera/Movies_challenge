@@ -1,7 +1,7 @@
 #ifndef MOVIE
 #define MOVIE
 #include <string>
-
+#include "Movie.h"
 class Movie
 {
 private:
