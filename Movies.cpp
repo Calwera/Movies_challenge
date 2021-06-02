@@ -6,16 +6,29 @@ Movies::Movies()
 }
 void Movies::add_movie()
 {
+    bool repeat{false};
     string name_movie, rating_movie;
     int count{};
     cout << "\nProsze podac nazwe filmu: ";
     cin >> name_movie;
-    cout << "\nProsze podac Rating PG: ";
-    rating_movie = pg_secure();
-    cout << "\nProsze podac ile razy ogladano: ";
-    cin >> count;
-    (*wkt).push_back(Movie(name_movie, rating_movie, count));
-    cout << "\nDodano nowa pozycje: ";
+
+    for (Movie colection : *wkt)
+        if (name_movie.compare(colection.name) == 0)
+            repeat = true;
+    if (!repeat)
+    {
+        cout << "\nProsze podac Rating PG: ";
+        rating_movie = pg_secure();
+        cout << "\nProsze podac ile razy ogladano: ";
+        cin >> count;
+        (*wkt).push_back(Movie(name_movie, rating_movie, count));
+        cout << "\nDodano nowa pozycje: ";
+    }
+    else
+    {
+        cout << "\nNazwa powtorzona !" << endl;
+        cout << "Nie dodano filmu..." << endl;
+    }
 }
 std::string Movies::pg_secure()
 {
@@ -43,13 +56,16 @@ void Movies::display()
 }
 void Movies::increment(std::string movie)
 {
-    for (Movie colection : *wkt)
+    bool increment{false};
+    for (int i = 0; i < (*wkt).size(); i++)
     {
-        if (movie.compare(colection.name) == 0) //konstruktor kopiujacy ?
+        if (movie.compare((*wkt).at(i).name) == 0)
         {
-            colection.watched_count += 1;
-            break;
+            (*wkt).at(i).watched_count += 1;
+            increment = true;
+            cout << "Zwiekszono liczbe wyswietlen!" << endl;
         }
     }
-    cout << "Nie znaleziono filmu !" << endl;
+    if (!increment)
+        cout << "Nie znaleziono filmu !" << endl;
 }
