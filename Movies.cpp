@@ -6,23 +6,23 @@ Movies::Movies()
 }
 void Movies::add_movie()
 {
-    bool repeat{false};
+
     string name_movie, rating_movie;
     int count{};
     cout << "\nProsze podac nazwe filmu: ";
     cin >> name_movie;
 
-    for (Movie colection : *wkt)
-        if (name_movie.compare(colection.name) == 0)
-            repeat = true;
-    if (!repeat)
+    if (!check_col_movie(name_movie))
     {
         cout << "\nProsze podac Rating PG: ";
         rating_movie = pg_secure();
-        cout << "\nProsze podac ile razy ogladano: ";
+        cout << "Prosze podac ile razy ogladano: ";
         cin >> count;
-        (*wkt).push_back(Movie(name_movie, rating_movie, count));
-        cout << "\nDodano nowa pozycje: ";
+        if (rating_movie == "")
+            (*wkt).push_back(Movie(name_movie, count));
+        else
+            (*wkt).push_back(Movie(name_movie, count, rating_movie));
+        cout << "Dodano nowa pozycje: " << name_movie << endl;
     }
     else
     {
@@ -33,26 +33,48 @@ void Movies::add_movie()
 std::string Movies::pg_secure()
 {
     std::string choise;
-    cout << "\nProsze podac jedna z opcji \n1 - G\n2 - PG \n3 - PG-13 \n4 - R: ";
+    cout << "\nProsze podac jedna z opcji: \n1 - G\n2 - PG \n3 - PG-13 \n4 - R: \nQ - pomin: ";
     cin >> choise;
     while (1)
     {
-        if (choise == "G")
+        if (choise == "G" || choise == "g")
             return choise;
-        else if (choise == "PG")
+        else if (choise == "PG" || choise == "pg")
             return choise;
-        else if (choise == "PG-13")
+        else if (choise == "PG-13" || choise == "pg-13" || choise == "pg13")
             return choise;
-        else if (choise == "R")
+        else if (choise == "R" || choise == "r")
             return choise;
+        else if (choise == "Q" || choise == "q")
+            return "";
         else
-            cout << "Bledna kategoria sprobuj jeszcze raz" << endl;
+            cout << "Bledna kategoria" << endl;
     }
 }
 void Movies::display()
 {
-    for (Movie colection : *wkt)
-        cout << colection.name << " " << colection.rating << " " << colection.watched_count << endl;
+    int how_to_show{};
+    cout << "/////////////WYSWIETLAM\\\\\\\\\\\\\\\\\\" << endl;
+    cout << "Wyswietl calosc dowolny znak " << endl;
+    cout << "Wyswietl konkretny film 1 :" << endl;
+    cin >> how_to_show;
+    if (how_to_show == 1)
+    {
+        std::string name_to_show;
+        cout << "Podaj nazwe filmu do sprawdzenia: ";
+        cin >> name_to_show;
+        if (check_col_movie(name_to_show))
+            cout << name_to_show << endl;
+        else
+            cout << "Nie ma takiego filmu " << endl;
+    }
+    else
+    {
+        cout << "=============Kolekcja================" << endl;
+        for (Movie colection : *wkt)
+            cout << colection.name << " " << colection.rating << " " << colection.watched_count << endl;
+        cout << "=====================================" << endl;
+    }
 }
 void Movies::increment(std::string movie)
 {
@@ -68,4 +90,12 @@ void Movies::increment(std::string movie)
     }
     if (!increment)
         cout << "Nie znaleziono filmu !" << endl;
+}
+bool Movies::check_col_movie(std::string name_val)
+{
+    bool duplicate{false};
+    for (Movie colection : *wkt)
+        if (colection.get_name(name_val)) // powtarza sie nazwa
+            return true;
+    return false;
 }

@@ -14,5 +14,6 @@ public:
     std::string pg_secure();
     void display();
     void increment(std::string);
+    bool check_col_movie(std::string);
 };
 #endif
